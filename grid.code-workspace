@@ -1,0 +1,16 @@
+{
+	"folders": [
+		{
+			"path": "..\\grid"
+		},
+		{
+			"path": "."
+		},
+		{
+			"path": "..\\practise.workspace"
+		}
+	],
+	"settings": {
+		"liveServer.settings.multiRootWorkspaceName": "practise.workspace"
+	}
+}
