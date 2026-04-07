@@ -214,6 +214,18 @@ const MAX_POWER = 22;
 canvas.width = TABLE_W;
 canvas.height = TABLE_H;
 
+// Pre-render felt texture to offscreen canvas
+const feltCanvas = document.createElement('canvas');
+feltCanvas.width = TABLE_W;
+feltCanvas.height = TABLE_H;
+const feltCtx = feltCanvas.getContext('2d');
+feltCtx.fillStyle = 'rgba(0,0,0,0.03)';
+for (let i = 0; i < 200; i++) {
+  const fx = RAIL + Math.random() * (TABLE_W - 2 * RAIL);
+  const fy = RAIL + Math.random() * (TABLE_H - 2 * RAIL);
+  feltCtx.fillRect(fx, fy, 2, 2);
+}
+
 // Pockets (x, y)
 const POCKETS = [
   { x: RAIL + 4, y: RAIL + 4 },
@@ -248,7 +260,6 @@ let balls = [];
 let cueBall = null;
 let dragging = false;
 let dragStart = { x: 0, y: 0 };
-let dragEnd = { x: 0, y: 0 };
 let mousePos = { x: 0, y: 0 };
 let shooting = false;
 let currentPlayer = 1;
@@ -260,7 +271,6 @@ let cueBallPocketed = false;
 let gameStarted = false;
 let gameOver = false;
 let placingCueBall = false;
-let turnSwitchPending = false;
 
 function createBall(id, x, y) {
   return { id, x, y, vx: 0, vy: 0, pocketed: false };
@@ -533,13 +543,8 @@ function drawTable() {
   ctx.fillStyle = '#0d7a3e';
   ctx.fillRect(RAIL, RAIL, TABLE_W - 2 * RAIL, TABLE_H - 2 * RAIL);
 
-  // Felt texture
-  ctx.fillStyle = 'rgba(0,0,0,0.03)';
-  for (let i = 0; i < 200; i++) {
-    const fx = RAIL + Math.random() * (TABLE_W - 2 * RAIL);
-    const fy = RAIL + Math.random() * (TABLE_H - 2 * RAIL);
-    ctx.fillRect(fx, fy, 2, 2);
-  }
+  // Felt texture (pre-rendered)
+  ctx.drawImage(feltCanvas, 0, 0);
 
   // Head string
   ctx.strokeStyle = 'rgba(255,255,255,0.1)';
